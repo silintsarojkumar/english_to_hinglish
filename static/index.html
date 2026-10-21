@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English to Hinglish Translator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f7f5;
+      color: #292929;
+    }
+
+    header {
+      padding: 20px 7%;
+      background: #fff;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    header p {
+      margin: 6px 0 0;
+      color: #777;
+      font-size: 13px;
+    }
+
+    main {
+      width: min(850px, 92%);
+      margin: 65px auto;
+    }
+
+    .intro {
+      margin-bottom: 28px;
+    }
+
+    .intro h1 {
+      margin: 0 0 10px;
+      font-size: clamp(27px, 5vw, 36px);
+      font-weight: 600;
+      letter-spacing: -1px;
+    }
+
+    .intro p {
+      margin: 0;
+      color: #707070;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .translator {
+      background: white;
+      border: 1px solid #dedede;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #fbfbfb;
+      border-bottom: 1px solid #dedede;
+    }
+
+    .labels div {
+      padding: 15px 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .labels div:first-child {
+      border-right: 1px solid #dedede;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .panel {
+      padding: 20px;
+      min-width: 0;
+    }
+
+    .panel:first-child {
+      border-right: 1px solid #dedede;
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      height: 190px;
+      resize: vertical;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #292929;
+      font: inherit;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    textarea::placeholder {
+      color: #aaa;
+    }
+
+    .result {
+      min-height: 190px;
+      font-size: 15px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: #aaa;
+    }
+
+    .panel-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: #888;
+      font-size: 12px;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .copy {
+      padding: 6px 10px;
+      background: white;
+      color: #555;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    .copy:hover, .clear:hover {
+      background: #f3f3f3;
+    }
+
+    .actions {
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid #dedede;
+    }
+
+    .hint {
+      color: #888;
+      font-size: 12px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .clear, .translate {
+      border-radius: 5px;
+      padding: 10px 15px;
+      font-size: 13px;
+    }
+
+    .clear {
+      background: white;
+      color: #444;
+      border: 1px solid #ddd;
+    }
+
+    .translate {
+      background: #303030;
+      color: white;
+      border: 1px solid #303030;
+    }
+
+    .translate:hover {
+      background: #484848;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px 14px;
+      border-radius: 5px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      background: #fff0f0;
+      border: 1px solid #efcccc;
+      color: #a52828;
+    }
+
+    .message.success {
+      display: block;
+      background: #f0f7ef;
+      border: 1px solid #d3e5d0;
+      color: #356b32;
+    }
+
+    .examples {
+      margin-top: 25px;
+    }
+
+    .examples p {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 12px;
+    }
+
+    .example {
+      display: inline-block;
+      margin: 0 6px 8px 0;
+      padding: 8px 11px;
+      border: 1px solid #dedede;
+      border-radius: 5px;
+      background: white;
+      color: #555;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .example:hover {
+      background: #f0f0ee;
+    }
+
+    footer {
+      margin-top: 45px;
+      padding-top: 18px;
+      border-top: 1px solid #e5e5e5;
+      color: #888;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 17px 5%;
+      }
+
+      main {
+        margin: 38px auto;
+      }
+
+      .panels {
+        grid-template-columns: 1fr;
+      }
+
+      .panel:first-child {
+        border-right: none;
+        border-bottom: 1px solid #dedede;
+      }
+
+      textarea, .result {
+        height: 130px;
+        min-height: 130px;
+      }
+
+      .actions {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .buttons {
+        width: 100%;
+      }
+
+      .buttons button {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h2>Hinglish Translator</h2>
+    <p>A simple English to Hinglish translator</p>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>English to Hinglish</h1>
+      <p>
+        Enter an English sentence below to get its Hinglish translation.
+      </p>
+    </section>
+
+    <section class="translator">
+      <div class="labels">
+        <div>English</div>
+        <div>Hinglish</div>
+      </div>
+
+      <div class="panels">
+        <div class="panel">
+          <textarea
+            id="inputText"
+            maxlength="1000"
+            placeholder="Type your English text here..."
+          ></textarea>
+
+          <div class="panel-bottom">
+            <span id="counter">0/1000</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div id="result" class="result muted" aria-live="polite">
+            Translation will appear here.
+          </div>
+
+          <div class="panel-bottom">
+            <span>Translation</span>
+            <button id="copyBtn" class="copy" disabled>Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <span class="hint">Press Ctrl + Enter to translate</span>
+
+        <div class="buttons">
+          <button id="clearBtn" class="clear">Clear</button>
+          <button id="translateBtn" class="translate">Translate</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="message" class="message" role="status"></div>
+
+    <section class="examples">
+      <p>Try an example</p>
+
+      <button class="example">How are you?</button>
+      <button class="example">I want to learn machine learning.</button>
+      <button class="example">What is your name?</button>
+    </section>
+
+    <footer>
+      This project uses a fine-tuned sequence-to-sequence translation model.
+      Translations may not always be accurate.
+    </footer>
+  </main>
+
+  <script>
+    const input = document.getElementById("inputText");
+    const result = document.getElementById("result");
+    const translateBtn = document.getElementById("translateBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const counter = document.getElementById("counter");
+    const message = document.getElementById("message");
+
+    let busy = false;
+
+    function showMessage(text, type = "error") {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function clearMessage() {
+      message.textContent = "";
+      message.className = "message";
+    }
+
+    input.addEventListener("input", () => {
+      counter.textContent = input.value.length + "/1000";
+      clearMessage();
+    });
+
+    async function translate() {
+      const text = input.value.trim();
+
+      if (busy) return;
+
+      if (!text) {
+        showMessage("Please enter some English text.");
+        input.focus();
+        return;
+      }
+
+      busy = true;
+      translateBtn.disabled = true;
+      clearBtn.disabled = true;
+      copyBtn.disabled = true;
+      translateBtn.textContent = "Translating...";
+      result.textContent = "Please wait...";
+      result.classList.add("muted");
+      clearMessage();
+
+      try {
+        const response = await fetch("/translate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ text })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            typeof data.detail === "string"
+              ? data.detail
+              : "Translation failed. Please try again."
+          );
+        }
+
+        if (!data.translation) {
+          throw new Error("No translation was returned.");
+        }
+
+        result.textContent = data.translation;
+        result.classList.remove("muted");
+        copyBtn.disabled = false;
+        showMessage("Translation completed.", "success");
+
+      } catch (error) {
+        result.textContent = "Translation unavailable.";
+        showMessage(
+          error.message || "Could not connect to the translation API."
+        );
+      } finally {
+        busy = false;
+        translateBtn.disabled = false;
+        clearBtn.disabled = false;
+        translateBtn.textContent = "Translate";
+      }
+    }
+
+    translateBtn.addEventListener("click", translate);
+
+    input.addEventListener("keydown", event => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        translate();
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      if (busy) return;
+
+      input.value = "";
+      counter.textContent = "0/1000";
+      result.textContent = "Translation will appear here.";
+      result.classList.add("muted");
+      copyBtn.disabled = true;
+      clearMessage();
+      input.focus();
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(result.textContent);
+        copyBtn.textContent = "Copied";
+        setTimeout(() => {
+          copyBtn.textContent = "Copy";
+        }, 1200);
+      } catch {
+        showMessage("Copy failed. Please select and copy the translation.");
+      }
+    });
+
+    document.querySelectorAll(".example").forEach(button => {
+      button.addEventListener("click", () => {
+        input.value = button.textContent;
+        counter.textContent = input.value.length + "/1000";
+        clearMessage();
+        input.focus();
+      });
+    });
+  </script>
+</body>
+</html>
