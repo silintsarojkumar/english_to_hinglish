@@ -3,6 +3,19 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+.venv/
+.env
+__pycache__/
+*.pyc
+
+# Large trained model files
+Artificts/*.safetensors
+Artificts/*.bin
+Artificts/*.pt
+Artificts/*.pth
+Artificts/*.h5
+Artificts/*.keras
+
 # C extensions
 *.so
 
